@@ -1,27 +1,22 @@
-from time import sleep
+from shiny import App, ui
 
-import pandas as pd
-from shiny import App, Inputs, Outputs, Session, render, ui
-
-app_ui = ui.page_fluid(ui.p("Hello world"), ui.output_data_frame("my_data"))
-
-
-def load_data() -> pd.DataFrame:
-    sleep(6)
-    return pd.DataFrame({"x": [1, 2, 3], "y": ["a", "b", "c"]})
-
-
-def server(input: Inputs, output: Outputs, session: Session):
-    print("Loading data...")
-    notification_id = ui.notification_show("Loading data", duration=None)
-    df = load_data()
-    print("Loading data complete!")
-    ui.notification_remove(notification_id)
-
-    @output
-    @render.data_frame
-    def my_data():
-        return render.DataGrid(df)
+# Define the UI
+app_ui = ui.page_fluid(
+    ui.include_css("./css/style.css", method="link_files"),
+    ui.include_js("./js/customjs.js", method="link_files"),
+    ui.h1("Simple Shiny App with External CSS"),
+    ui.div(
+        ui.p("This is a simple Shiny app that demonstrates ui.include_css()"),
+        ui.p("The styling comes from an external CSS file!"),
+        class_="content",
+    ),
+)
 
 
+# Define the server
+def server(input, output, session):
+    pass
+
+
+# Create and run the app
 app = App(app_ui, server)
